@@ -18,9 +18,15 @@ JOKE = (
 
 
 def validate(line: str) -> bytes:
-    """Runtime validation: exactly one line, 1-200 chars, valid UTF-8."""
+    """Runtime validation: exactly one line, 1-200 chars, valid UTF-8.
+
+    The line is stripped first, so a joke with stray surrounding
+    whitespace (or one that is whitespace-only) is rejected instead
+    of being written out with invisible padding.
+    """
+    line = line.strip()
     if not line or len(line) > 200:
-        raise ValueError("entry must be 1-200 characters")
+        raise ValueError("entry must be 1-200 non-whitespace characters")
     if "\n" in line or "\r" in line:
         raise ValueError("entry must be a single line")
     return (line + "\n").encode("utf-8")
